@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Systems Engineering Quiz — HSHL</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple: #534AB7;
+    --purple-light: #EEEDFE;
+    --purple-dark: #3C3489;
+    --purple-text: #26215C;
+    --teal: #0F6E56;
+    --teal-light: #E1F5EE;
+    --teal-text: #04342C;
+    --coral: #993C1D;
+    --coral-light: #FAECE7;
+    --coral-text: #4A1B0C;
+    --gray-bg: #F5F5F3;
+    --gray-border: #DDDDD8;
+    --text: #1a1a1a;
+    --text-muted: #666;
+    --white: #fff;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0efe8;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 1.5rem 1rem;
+    color: var(--text);
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    max-width: 800px;
+  }
+  .header h1 { font-size: clamp(20px, 3vw, 28px); font-weight: 600; color: var(--purple-dark); }
+  .header p { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+  .badge { display: inline-block; background: var(--purple-light); color: var(--purple-dark); font-size: 12px; font-weight: 600; padding: 3px 12px; border-radius: 99px; margin-top: 6px; }
+
+  /* ── PROGRESS ── */
+  .progress-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; width: 100%; max-width: 800px; }
+  .progress-bar-bg { flex: 1; height: 6px; background: var(--gray-border); border-radius: 99px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: var(--purple); border-radius: 99px; transition: width 0.4s ease; }
+  .progress-text { font-size: 13px; color: var(--text-muted); white-space: nowrap; }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-border);
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 1rem;
+  }
+
+  .q-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 1.25rem; }
+  .q-badge { background: var(--purple-light); color: var(--purple-text); font-size: 13px; font-weight: 600; padding: 4px 12px; border-radius: 99px; flex-shrink: 0; margin-top: 2px; }
+  .q-text { font-size: clamp(15px, 2.5vw, 18px); font-weight: 600; line-height: 1.5; color: var(--text); }
+
+  /* ── OPTIONS ── */
+  .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .options.tf { grid-template-columns: 1fr 1fr; max-width: 400px; }
+
+  .opt {
+    background: var(--gray-bg);
+    border: 1.5px solid var(--gray-border);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    text-align: left;
+    transition: all 0.15s;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .opt:hover { border-color: var(--purple); background: var(--purple-light); }
+  .opt.selected { border-color: var(--purple); background: var(--purple-light); color: var(--purple-text); }
+  .opt.correct { border-color: var(--teal); background: var(--teal-light); color: var(--teal-text); }
+  .opt.wrong { border-color: var(--coral); background: var(--coral-light); color: var(--coral-text); }
+  .opt-label { font-weight: 700; font-size: 15px; flex-shrink: 0; min-width: 20px; }
+
+  /* ── VOTE BAR ── */
+  .vote-section { margin-top: 1rem; display: none; }
+  .vote-row { margin-bottom: 8px; }
+  .vote-info { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 3px; }
+  .vote-bar-bg { height: 8px; background: var(--gray-border); border-radius: 99px; overflow: hidden; }
+  .vote-bar-fill { height: 100%; background: var(--purple); border-radius: 99px; transition: width 0.6s ease; }
+  .vote-bar-fill.correct-bar { background: var(--teal); }
+
+  /* ── ANSWER BOX ── */
+  .answer-box {
+    display: none;
+    margin-top: 1rem;
+    padding: 12px 16px;
+    background: var(--teal-light);
+    border: 1px solid #5DCAA5;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    color: var(--teal-text);
+    line-height: 1.6;
+  }
+  .answer-box strong { font-weight: 600; }
+
+  .q-source { font-size: 11px; color: #aaa; margin-top: 10px; }
+
+  /* ── BUTTONS ── */
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 800px; margin-bottom: 1rem; }
+  .btn {
+    padding: 10px 24px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--gray-border);
+    background: var(--white);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text);
+    transition: all 0.15s;
+  }
+  .btn:hover { background: var(--gray-bg); }
+  .btn.primary { background: var(--purple); color: #fff; border-color: var(--purple); }
+  .btn.primary:hover { background: var(--purple-dark); }
+  .btn.danger { background: #fff; color: var(--coral); border-color: var(--coral-light); }
+  .btn.danger:hover { background: var(--coral-light); }
+
+  /* ── NAV DOTS ── */
+  .nav-row { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 800px; margin-bottom: 1.5rem; }
+  .nav-dot {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 1.5px solid var(--gray-border);
+    background: var(--white);
+    font-size: 12px; font-weight: 600;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted);
+    transition: all 0.15s;
+  }
+  .nav-dot:hover { border-color: var(--purple); color: var(--purple); }
+  .nav-dot.answered { background: var(--purple-light); color: var(--purple-text); border-color: var(--purple); }
+  .nav-dot.active { background: var(--purple); color: #fff; border-color: var(--purple); }
+  .nav-dot.correct-dot { background: var(--teal-light); color: var(--teal-text); border-color: var(--teal); }
+  .nav-dot.wrong-dot { background: var(--coral-light); color: var(--coral-text); border-color: var(--coral); }
+
+  /* ── SCORE SCREEN ── */
+  .score-screen {
+    display: none;
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-border);
+    width: 100%;
+    max-width: 800px;
+  }
+  .score-big { font-size: 64px; font-weight: 700; color: var(--purple); line-height: 1; }
+  .score-label { font-size: 18px; color: var(--text-muted); margin-top: 8px; }
+  .score-emoji { font-size: 48px; margin-top: 1rem; }
+  .score-breakdown { margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .score-stat { background: var(--gray-bg); border-radius: var(--radius-sm); padding: 12px 20px; text-align: center; }
+  .score-stat-num { font-size: 24px; font-weight: 600; }
+  .score-stat-label { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  /* ── MOBILE ── */
+  @media (max-width: 500px) {
+    .options { grid-template-columns: 1fr; }
+    .options.tf { grid-template-columns: 1fr 1fr; max-width: 100%; }
+    .opt { font-size: 13px; padding: 10px 12px; }
+    .q-text { font-size: 15px; }
+    .btn { padding: 10px 16px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Systems Engineering Quiz</h1>
+  <p>Hochschule Hamm-Lippstadt · Dr. Henkler &amp; Dr. Pasandideh</p>
+  <span class="badge">12 Questions · Life Cycle &amp; INCOSE Processes</span>
+</div>
+
+<div class="progress-row">
+  <div class="progress-bar-bg"><div class="progress-bar-fill" id="pbar" style="width:8.3%"></div></div>
+  <span class="progress-text" id="ptext">1 / 12</span>
+</div>
+
+<div class="btn-row">
+  <button class="btn" onclick="prevQ()">← Previous</button>
+  <button class="btn primary" onclick="revealAnswer()">✓ Show Answer</button>
+  <button class="btn" onclick="nextQ()">Next →</button>
+  <button class="btn danger" onclick="resetAll()">↺ Reset</button>
+</div>
+
+<div id="q-container"></div>
+
+<div class="nav-row" id="nav-row"></div>
+
+<div class="score-screen" id="score-screen">
+  <div class="score-emoji" id="score-emoji">🎉</div>
+  <div class="score-big" id="score-big">0</div>
+  <div class="score-label">out of 12 correct</div>
+  <div class="score-breakdown">
+    <div class="score-stat"><div class="score-stat-num" id="s-correct" style="color:var(--teal)">0</div><div class="score-stat-label">Correct</div></div>
+    <div class="score-stat"><div class="score-stat-num" id="s-wrong" style="color:var(--coral)">0</div><div class="score-stat-label">Wrong</div></div>
+    <div class="score-stat"><div class="score-stat-num" id="s-skip" style="color:#aaa">0</div><div class="score-stat-label">Skipped</div></div>
+  </div>
+  <button class="btn primary" style="margin-top:1.5rem" onclick="resetAll()">↺ Try Again</button>
+</div>
+
+<script>
+const questions = [
+  {
+    q: "What is the BIGGEST weakness of the Waterfall Model?",
+    opts: ["It has no testing phase at all","Going back to fix late-discovered problems costs enormous time","It requires too many stakeholders","It cannot be used for embedded systems"],
+    ans: 1,
+    explain: "✓ Correct answer: B — In Waterfall, phases are sequential with no easy way back. Discovering in Week 4 (testing) that IR sensors cannot read gray concrete means going all the way back to Week 1. Enormous rework!",
+    src: "Lecture 08 — Waterfall Model",
+    tf: false
+  },
+  {
+    q: "True or False: The Prototyping model is especially useful when requirements are very clear and stable from the beginning.",
+    opts: ["True","False"],
+    ans: 1,
+    explain: "✓ Correct answer: FALSE — Prototyping is great precisely when requirements are UNCLEAR. The customer is involved in every loop to clarify and refine needs iteratively.",
+    src: "Lecture 08 — Prototyping Process",
+    tf: true
+  },
+  {
+    q: "In the V-Model, the left side (going down) represents…",
+    opts: ["Testing and verification activities","Planning and building — design and coding","Deployment and customer handover","Risk analysis and evaluation loops"],
+    ans: 1,
+    explain: "✓ Correct answer: B — Left side = plan/build (requirements → design → coding). Right side = prove/test (unit test → integration → system test → validation). You plan going DOWN, you prove going UP.",
+    src: "Lecture 08 — V-Model",
+    tf: false
+  },
+  {
+    q: "What is the optimal number of loops in a Spiral Model?",
+    opts: ["1–2 loops","3–6 loops","10–15 loops","As many loops as needed"],
+    ans: 1,
+    explain: "✓ Correct answer: B — 3–6 loops is optimal, one loop per major risk. Too many loops lead to cost overruns, analysis paralysis, scope creep, and team fatigue. When no significant unknown remains — stop and build.",
+    src: "Lecture 08 — Spiral Model",
+    tf: false
+  },
+  {
+    q: "In MDA (Model Driven Architecture), the obstacle-avoidance logic is defined in the PIM. What changes when you switch from Raspberry Pi to NVIDIA Jetson?",
+    opts: ["The PIM must be rewritten completely","Only the PSM (Platform Specific Model) changes","Both PIM and PSM must change","Only the CIM changes"],
+    ans: 1,
+    explain: "✓ Correct answer: B — The PIM (logic) never changes. Only the PSM is rewritten per target platform. This is the key insight of MDA: design once at an abstract level, deploy anywhere.",
+    src: "Lecture 08 — MDA",
+    tf: false
+  },
+  {
+    q: "INCOSE was originally founded in 1990 under what name?",
+    opts: ["Global Council on Systems Engineering (GCSE)","National Council on Systems Engineering (NCOSE)","International Systems Engineering Board (ISEB)","Systems Engineering Institute (SEI)"],
+    ans: 1,
+    explain: "✓ Correct answer: B — INCOSE started in 1990 as NCOSE (National Council on Systems Engineering, USA). In 1995 it expanded internationally and was renamed to INCOSE. Today it has over 9000 members.",
+    src: "Lecture W8 — INCOSE History",
+    tf: false
+  },
+  {
+    q: "According to ISO/IEC 15288:2008, how many process groups support Systems Engineering?",
+    opts: ["Two process groups","Three process groups","Four process groups","Five process groups"],
+    ans: 2,
+    explain: "✓ Correct answer: C — There are FOUR groups: (1) Technical Processes, (2) Project Processes, (3) Agreement Processes, and (4) Organizational Project-Enabling Processes. Plus the Tailoring Process.",
+    src: "Lecture W8 — Life Cycle Overview",
+    tf: false
+  },
+  {
+    q: "Verification vs. Validation — which statement is CORRECT?",
+    opts: ["They are the same — both check the final product","Verification = did we build it right? Validation = did we build the right thing?","Verification uses real customers; Validation uses lab tests","Verification happens after deployment; Validation before coding"],
+    ans: 1,
+    explain: "✓ Correct answer: B — Verification checks that technical design requirements are met (lab/test bench). Validation checks with real users in the real environment whether the system solves the original stakeholder need.",
+    src: "Lecture W8 — Technical Process",
+    tf: false
+  },
+  {
+    q: "Which of the following is NOT one of the 8 characteristics of a good requirement?",
+    opts: ["Verifiable and traceable","Innovative and creative","Clear, concise, and complete","Necessary and achievable"],
+    ans: 1,
+    explain: "✓ Correct answer: B — The 8 characteristics are: Necessary, Implementation independent, Clear and concise, Complete, Consistent, Achievable, Traceable, Verifiable. 'Innovative' is not a property of requirements.",
+    src: "Lecture W8 — Requirements Analysis",
+    tf: false
+  },
+  {
+    q: "The Boeing 737 MAX MCAS disaster: what was the single most critical engineering failure?",
+    opts: ["Software was never tested before deployment","MCAS relied on only ONE angle-of-attack sensor with no redundancy","The pilots were not licensed to fly the aircraft","Boeing used the wrong programming language"],
+    ans: 1,
+    explain: "✓ Correct answer: B — MCAS used only ONE sensor — a single point of failure. When it gave a faulty reading, MCAS activated uncontrollably. Pilots were never told MCAS existed and had no way to stop it. 346 people killed.",
+    src: "Lecture W8 — Boeing 737 MAX Case",
+    tf: false
+  },
+  {
+    q: "In the HSUV Generic Life Cycle cost chart: how much more expensive is it to fix a defect at Retirement vs. Concept?",
+    opts: ["10× more expensive","50× more expensive","200× more expensive","1000× more expensive"],
+    ans: 3,
+    explain: "✓ Correct answer: D — Concept = 1×, Development = 10×, Production = 50×, Utilization/Support = 200×, Retirement = 1000×. This is the fundamental reason Systems Engineering invests heavily in getting requirements right EARLY.",
+    src: "Lecture W8 — Generic Life Cycle HSUV",
+    tf: false
+  },
+  {
+    q: "True or False: Tailoring means applying the full INCOSE/ISO 15288 standard without any modifications to every project.",
+    opts: ["True","False"],
+    ans: 1,
+    explain: "✓ Correct answer: FALSE — Tailoring is the process of ADAPTING the standard to fit the specific project context. Example: Full ISO 26262 applies to the HSUV battery software; only a simplified process applies to the cup holder mechanism.",
+    src: "Lecture W8 — Tailoring Process",
+    tf: true
+  }
+];
+
+let current = 0;
+let votes = questions.map(q => new Array(q.opts.length).fill(0));
+let revealed = new Array(questions.length).fill(false);
+let userAns = new Array(questions.length).fill(-1);
+const labels = ['A','B','C','D'];
+
+function render() {
+  const q = questions[current];
+  const pct = ((current + 1) / questions.length * 100).toFixed(1);
+  document.getElementById('pbar').style.width = pct + '%';
+  document.getElementById('ptext').textContent = (current + 1) + ' / ' + questions.length;
+
+  const isTF = q.tf;
+  const optClass = isTF ? 'options tf' : 'options';
+  let optsHtml = `<div class="${optClass}">`;
+  q.opts.forEach((o, i) => {
+    let cls = 'opt';
+    if (revealed[current]) {
+      if (i === q.ans) cls += ' correct';
+      else if (userAns[current] === i) cls += ' wrong';
+    } else if (userAns[current] === i) {
+      cls += ' selected';
+    }
+    const lbl = isTF ? '' : `<span class="opt-label">${labels[i]}</span>`;
+    optsHtml += `<button class="${cls}" onclick="vote(${i})">${lbl}${o}</button>`;
+  });
+  optsHtml += '</div>';
+
+  const totalVotes = votes[current].reduce((a, b) => a + b, 0);
+  let voteHtml = `<div class="vote-section" id="vote-sec" style="display:${revealed[current] ? 'block' : 'none'}">`;
+  q.opts.forEach((o, i) => {
+    const pctV = totalVotes > 0 ? Math.round(votes[current][i] / totalVotes * 100) : 0;
+    const isCorrect = i === q.ans;
+    const barCls = isCorrect ? 'vote-bar-fill correct-bar' : 'vote-bar-fill';
+    const ll = isTF ? o : labels[i];
+    voteHtml += `<div class="vote-row">
+      <div class="vote-info"><span>${ll}: ${votes[current][i]} vote${votes[current][i] !== 1 ? 's' : ''}</span><span>${pctV}%</span></div>
+      <div class="vote-bar-bg"><div class="${barCls}" style="width:${pctV}%"></div></div>
+    </div>`;
+  });
+  voteHtml += '</div>';
+
+  const ansHtml = `<div class="answer-box" id="ans-box" style="display:${revealed[current] ? 'block' : 'none'}">${q.explain}</div>`;
+
+  document.getElementById('q-container').innerHTML = `
+    <div class="card">
+      <div class="q-header">
+        <span class="q-badge">Q${current + 1}</span>
+        <span class="q-text">${q.q}</span>
+      </div>
+      ${optsHtml}
+      ${voteHtml}
+      ${ansHtml}
+      <div class="q-source">${q.src}</div>
+    </div>`;
+
+  renderNav();
+}
+
+function renderNav() {
+  const nav = document.getElementById('nav-row');
+  nav.innerHTML = questions.map((q, i) => {
+    let cls = 'nav-dot';
+    if (i === current) cls += ' active';
+    else if (revealed[i]) {
+      if (userAns[i] === q.ans) cls += ' correct-dot';
+      else if (userAns[i] >= 0) cls += ' wrong-dot';
+      else cls += ' answered';
+    } else if (userAns[i] >= 0) {
+      cls += ' answered';
+    }
+    return `<div class="${cls}" onclick="goTo(${i})">${i + 1}</div>`;
+  }).join('');
+}
+
+function vote(i) {
+  if (revealed[current]) return;
+  if (userAns[current] >= 0) votes[current][userAns[current]]--;
+  userAns[current] = i;
+  votes[current][i]++;
+  render();
+}
+
+function revealAnswer() {
+  revealed[current] = true;
+  render();
+  if (revealed.every(r => r)) {
+    setTimeout(showScore, 600);
+  }
+}
+
+function showScore() {
+  let correct = 0, wrong = 0, skip = 0;
+  questions.forEach((q, i) => {
+    if (userAns[i] === q.ans) correct++;
+    else if (userAns[i] >= 0) wrong++;
+    else skip++;
+  });
+  document.getElementById('score-big').textContent = correct;
+  document.getElementById('s-correct').textContent = correct;
+  document.getElementById('s-wrong').textContent = wrong;
+  document.getElementById('s-skip').textContent = skip;
+  const pct = correct / questions.length;
+  document.getElementById('score-emoji').textContent = pct >= 0.8 ? '🏆' : pct >= 0.6 ? '👍' : pct >= 0.4 ? '📚' : '💪';
+  document.getElementById('score-screen').style.display = 'block';
+  document.getElementById('score-screen').scrollIntoView({ behavior: 'smooth' });
+}
+
+function nextQ() {
+  if (current < questions.length - 1) { current++; render(); window.scrollTo(0,0); }
+}
+function prevQ() {
+  if (current > 0) { current--; render(); window.scrollTo(0,0); }
+}
+function goTo(i) { current = i; render(); window.scrollTo(0,0); }
+function resetAll() {
+  current = 0;
+  votes = questions.map(q => new Array(q.opts.length).fill(0));
+  revealed = new Array(questions.length).fill(false);
+  userAns = new Array(questions.length).fill(-1);
+  document.getElementById('score-screen').style.display = 'none';
+  render();
+  window.scrollTo(0, 0);
+}
+
+render();
+</script>
+</body>
+</html>
