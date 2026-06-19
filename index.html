@@ -38,7 +38,39 @@
     padding: 1.5rem 1rem;
     color: var(--text);
   }
+<!-- QR CODE START -->
+<div style="
+    text-align:center;
+    margin:20px auto;
+    padding:20px;
+    background:white;
+    border-radius:12px;
+    max-width:800px;
+    border:1px solid #DDDDD8;
+">
+    <h2 style="color:#534AB7; margin-bottom:10px;">
+        Scan QR Code to Join the Quiz
+    </h2>
 
+    <div id="qrcode" style="display:flex; justify-content:center;"></div>
+
+    <p style="margin-top:10px; color:#666; font-size:14px;">
+        Use your smartphone camera
+    </p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script>
+window.addEventListener("load", function () {
+    new QRCode(document.getElementById("qrcode"), {
+        text: "https://faezeh1989.github.io/SE-quizes/",
+        width: 200,
+        height: 200
+    });
+});
+</script>
+<!-- QR CODE END -->
   /* ── HEADER ── */
   .header {
     text-align: center;
