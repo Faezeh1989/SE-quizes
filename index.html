@@ -348,12 +348,12 @@
     <div class="meta-row">
       <div class="meta-item"><div class="meta-dot"></div>Dr. Faezeh Pasandideh</div>
       <div class="meta-item"><div class="meta-dot"></div>Department of Electrical Engineering &amp; Computer Science</div>
-      <div class="meta-item"><div class="meta-dot"></div>Summer Semester 2025</div>
+      <div class="meta-item"><div class="meta-dot"></div>Summer Semester 2026</div>
     </div>
     <div class="badge-row">
-      <span class="badge bp">12 Questions</span>
+      <span class="badge bp">35 Questions</span>
       <span class="badge bt">Live Voting</span>
-      <span class="badge bp">ISO/IEC 15288</span>
+      <span class="badge bp">ISO/IEC 15288 · RE · SysML</span>
     </div>
   </div>
 
@@ -422,7 +422,7 @@
 <div id="score-screen">
   <div class="score-emoji" id="score-emoji">🎉</div>
   <div class="score-big" id="score-big">0</div>
-  <div class="score-label">out of 12 correct</div>
+  <div class="score-label">out of 35 correct</div>
   <div class="score-breakdown">
     <div class="score-stat"><div class="score-stat-num" id="s-correct" style="color:#6AC9AC">0</div><div class="score-stat-label">Correct</div></div>
     <div class="score-stat"><div class="score-stat-num" id="s-wrong" style="color:#E8907A">0</div><div class="score-stat-label">Wrong</div></div>
@@ -520,6 +520,173 @@ const questions = [
     ans: 1,
     explain: "✓ <strong>FALSE — Tailoring = ADAPTING</strong> the standard to fit the specific project. Full ISO 26262 for HSUV battery software; simplified process for the cup holder.",
     src: "Lecture W8 — Tailoring Process", tf: true
+  },
+
+  // ── DOC 2: Requirements Engineering ──
+  {
+    q: "According to studies worldwide, what percentage of software errors originate from wrong or missing requirements?",
+    opts: ["42%","62%","82%","92%"],
+    ans: 2,
+    explain: "✓ <strong>C — 82%</strong> of software errors come from wrong or missing requirements — not bad code, not hardware failure. Getting requirements right is the single highest-impact activity.",
+    src: "Doc 2 — Requirements Engineering, Slide 3", tf: false
+  },
+  {
+    q: "In the Denver Airport baggage system disaster, what was identified as the ROOT CAUSE of the $500 million failure?",
+    opts: ["Faulty hardware components","Bad programmers writing buggy code","Teams never fully agreed on what the system should do","The wrong programming language was chosen"],
+    ans: 2,
+    explain: "✓ <strong>C — No shared understanding.</strong> The airport authority, airlines, software engineers, and mechanical engineers each had a different picture in their heads. Hundreds of millions were built on a wrong foundation.",
+    src: "Doc 2 — Denver Airport Case Study", tf: false
+  },
+  {
+    q: "True or False: Validation checks that the code matches the specification, while Verification checks that the specification matches real human needs.",
+    opts: ["True","False"],
+    ans: 1,
+    explain: "✓ <strong>FALSE — It's the opposite!</strong> Verification checks code against spec ('did we build it right?'). Validation checks the spec against real human needs ('did we build the right thing?') — before a single line of code is written.",
+    src: "Doc 2 — Slide 16, Validation", tf: true
+  },
+  {
+    q: "Which Requirements Engineering elicitation technique is MOST powerful for discovering requirements users would never think to mention in an interview?",
+    opts: ["Questionnaires sent by email","Prototyping — showing a rough version to stakeholders","Contextual Design — observing users in their actual work environment","Reading existing documentation"],
+    ans: 2,
+    explain: "✓ <strong>C — Contextual Design.</strong> A nurse might never mention she always checks the allergy list before approving medication — she just does it automatically. Observation reveals what interviews miss.",
+    src: "Doc 2 — Elicitation Techniques", tf: false
+  },
+  {
+    q: "What are the THREE conditions a requirements document must satisfy before it can be used as a reliable foundation for development?",
+    opts: ["Fast, cheap, and reusable","Complete, consistent, and unambiguous","Formal, mathematical, and machine-checkable","Validated, verified, and delivered"],
+    ans: 1,
+    explain: "✓ <strong>B — Complete, Consistent, Unambiguous.</strong> Complete = nothing missing. Consistent = no contradictions. Unambiguous = every statement means exactly one thing. Only then can development begin reliably.",
+    src: "Doc 2 — Slide 13, Analysis and Negotiation", tf: false
+  },
+  {
+    q: "True or False: Requirements Engineering is a linear process — once elicitation is done, you never go back.",
+    opts: ["True","False"],
+    ans: 1,
+    explain: "✓ <strong>FALSE — RE is a CYCLE.</strong> Analysis often reveals gaps that require going back to stakeholders with more questions. Requirements also change throughout the project — management runs for the entire lifetime.",
+    src: "Doc 2 — RE Cycle, Slides 17 & 19", tf: true
+  },
+
+  // ── DOC 3: Q&A Study Guide ──
+  {
+    q: "What is the key architectural reason modern cars use 61 ECUs instead of one central computer?",
+    opts: ["One central computer would be too expensive","If one ECU fails, only its specific function is affected — not the entire vehicle","Central computers cannot process CAN bus signals","Government regulations require distributed architecture"],
+    ans: 1,
+    explain: "✓ <strong>B — Modularity and fault isolation.</strong> A failed climate control ECU doesn't affect braking. With one central computer, any failure affects everything — including safety-critical functions.",
+    src: "Doc 3 — Q17, Why 61 ECUs?", tf: false
+  },
+  {
+    q: "What does the IEEE keyword 'quantifiable' mean in the definition of Software Engineering?",
+    opts: ["Software must be sold at a fixed price","Quality, progress, and success can be expressed and measured as numbers","All software must pass a formal certification exam","Every function must be written in a formal mathematical language"],
+    ans: 1,
+    explain: "✓ <strong>B — Measured with numbers.</strong> Not 'the code seems good' but '94% code coverage achieved; DO-178C requires 100%.' Engineering is distinguished from craft by the ability to measure, verify, and predict.",
+    src: "Doc 3 — Q24, Quantifiable", tf: false
+  },
+  {
+    q: "True or False: A Cyber Physical System (CPS) can exist without containing any embedded systems.",
+    opts: ["True","False"],
+    ans: 1,
+    explain: "✓ <strong>FALSE — Impossible by definition.</strong> A CPS requires physical devices that sense, process, and act — which requires software embedded inside them. Every CPS is built from embedded systems as its building blocks.",
+    src: "Doc 3 — Q23, CPS without embedded systems", tf: true
+  },
+  {
+    q: "What is the DIFFERENCE between a hard real-time and a soft real-time system?",
+    opts: ["Hard real-time uses faster processors","In hard real-time, missing a deadline IS a system failure; in soft real-time, occasional misses are tolerable","Hard real-time only applies to military systems","Soft real-time has no deadlines at all"],
+    ans: 1,
+    explain: "✓ <strong>B — Late = wrong (hard) vs. late = degraded (soft).</strong> Airbag must fire within 30ms — missing that deadline means death. A dropped video frame causes a glitch, not a disaster.",
+    src: "Doc 3 — Q11, Hard vs. Soft Real-Time", tf: false
+  },
+  {
+    q: "The Ariane 5 rocket explosion (1996) is cited as a classic failure of which engineering principle?",
+    opts: ["Using the wrong fuel mixture","Software reused from Ariane 4 was not re-validated for the new system's different flight dynamics","The programming language used was not suitable for space","Hardware sensors were not calibrated correctly"],
+    ans: 1,
+    explain: "✓ <strong>B — Failure of integration.</strong> The software team reused Ariane 4 code without re-integrating it into the new systems context. Classic 'differentiate, not integrate' failure — different disciplines not working together.",
+    src: "Doc 3 — Q22, Integrate not Differentiate", tf: false
+  },
+  {
+    q: "True or False: The NATO Conference in Garmisch (1968) established that software development must be treated as engineering — systematic, disciplined, and quantifiable.",
+    opts: ["True","False"],
+    ans: 0,
+    explain: "✓ <strong>TRUE.</strong> The 1968 NATO Conference was the birth of Software Engineering as a profession. Before it, software was built like a craft — no standards, no documentation, no process — causing the Software Crisis.",
+    src: "Doc 3 — Q14, NATO Conference 1968", tf: true
+  },
+
+  // ── DOC 4 & 5: SysML / Blocks / IBD ──
+  {
+    q: "In SysML, what is the difference between a BLOCK and a PART?",
+    opts: ["They are identical — just different names","A Block is a definition (like a blueprint); a Part is a specific usage of that block inside a larger system","A Block is always hardware; a Part is always software","Parts are defined first, then Blocks are derived from them"],
+    ans: 1,
+    explain: "✓ <strong>B — Block = cookie cutter, Part = one cookie.</strong> The Block defines what something IS. The Part is how it is used inside a specific larger block. The same Block definition can be reused as many Parts.",
+    src: "Doc 4/5 — Slides 27, Block vs. Part", tf: false
+  },
+  {
+    q: "What does a Block Definition Diagram (BDD) show, and how is it different from an Internal Block Diagram (IBD)?",
+    opts: ["BDD shows behavior over time; IBD shows static structure","BDD shows what blocks exist and how they relate; IBD shows the internal wiring and connections INSIDE a specific block","BDD is for software only; IBD is for hardware only","They are the same diagram with different names"],
+    ans: 1,
+    explain: "✓ <strong>B — BDD = parts catalogue; IBD = wiring diagram.</strong> BDD lists all components and their types. IBD opens one specific block and shows how its parts are connected with ports and item flows.",
+    src: "Doc 4/5 — Slides 24–27, BDD vs. IBD", tf: false
+  },
+  {
+    q: "In SysML, what does COMPOSITION mean, and how is it different from ASSOCIATION?",
+    opts: ["Composition = software only; Association = hardware only","Composition = the part CANNOT exist without the parent (strong ownership); Association = two blocks interact but exist independently","Composition is used in IBD only; Association is used in BDD only","They mean the same thing in SysML"],
+    ans: 1,
+    explain: "✓ <strong>B — Ownership vs. Interaction.</strong> An LED is composed into CarLight — it has no meaning outside it. A Driver is associated with a Car — the Driver exists independently.",
+    src: "Doc 4/5 — Slides 22–23, Relations Between Blocks", tf: false
+  },
+  {
+    q: "True or False: In SysML, flow properties say what DOES flow between parts in a specific system, while item flows say what COULD flow.",
+    opts: ["True","False"],
+    ans: 1,
+    explain: "✓ <strong>FALSE — It's the opposite!</strong> Flow properties (on the block definition) say what COULD flow — it's a capability/contract. Item flows (in a specific IBD context) say what DOES flow in this particular system.",
+    src: "Doc 5 — Slides 30–31, Ports and Item Flows", tf: true
+  },
+  {
+    q: "In a SysML Requirement Diagram, what does the 'satisfy' relationship mean?",
+    opts: ["A test case has been run and the requirement passes","A design block (component) implements and fulfills the requirement","A use case refines and explains the requirement in more detail","Two requirements are derived from the same parent"],
+    ans: 1,
+    explain: "✓ <strong>B — satisfy = design element fulfills the requirement.</strong> The Radio block 'satisfies' the Radio management requirement. This creates the traceability chain: requirement → design → test.",
+    src: "Doc 2/4 — Slide 36, Requirement Diagram Relations", tf: false
+  },
+  {
+    q: "What is the FIRST LAW of Software Evolution (Lehman)?",
+    opts: ["Software must be tested before deployment","If software is being used, it will keep changing — or it becomes useless","Software quality decreases linearly over time","Every software project exceeds its initial budget"],
+    ans: 1,
+    explain: "✓ <strong>B — Change is inevitable.</strong> No system stays the same. Users change their minds (41.8% of maintenance changes). Good design anticipates change and makes it manageable — bad design breaks every time you touch it.",
+    src: "Doc 5 — Slide 5, First Law of Software Evolution", tf: false
+  },
+  {
+    q: "True or False: In SysML, a Proxy Port passes through connections transparently, while a Full Port has its own independent behavior.",
+    opts: ["True","False"],
+    ans: 0,
+    explain: "✓ <strong>TRUE.</strong> Proxy port = a window (transparent, just passes through to inside). Full port = a door with a guard (can check, filter, or respond independently before passing to the inner part).",
+    src: "Doc 5 — Slide 28, Ports", tf: true
+  },
+  {
+    q: "In the SysML Requirement Diagram for the alarm clock, what relationship connects 'Radio management' to 'Radio station management' and 'Radio volume management'?",
+    opts: ["deriveReqt — one is derived from the other","refine — adds precision with technical values","containment — together they fully define what radio management means","satisfy — a design block fulfills the requirement"],
+    ans: 2,
+    explain: "✓ <strong>C — Containment.</strong> Radio station management + Radio volume management are contained within Radio management. Together they break a big requirement into its two parts, fully defining what 'managing the radio' means.",
+    src: "Doc 2 — Slide 34, Requirement Diagram Alarm Clock", tf: false
+  },
+  {
+    q: "According to the analysis vs. design distinction: which of these is an ANALYSIS statement for a traffic light?",
+    opts: ["Use a timer interrupt on pin 3 of the Arduino","Use millis() for non-blocking timing in the main loop","The pedestrian green phase shall last at least 15 seconds","Connect the buzzer to PWM pin 8"],
+    ans: 2,
+    explain: "✓ <strong>C — Analysis describes WHAT, not HOW.</strong> '15 seconds minimum' is a requirement — it describes what must happen. Timer interrupts, pin numbers, and PWM are design decisions — they describe one way to implement it.",
+    src: "Doc 5 — Slide 3, Analysis vs. Design", tf: false
+  },
+  {
+    q: "True or False: SysML was developed by INCOSE and OMG starting in 2001, and it includes ALL diagrams from UML without any additions or removals.",
+    opts: ["True","False"],
+    ans: 1,
+    explain: "✓ <strong>FALSE — SysML extends AND reduces UML.</strong> It adds Requirements diagrams, Parametric diagrams, and Allocation diagrams. It removes some software-specific UML elements. SysML is a subset+extension of UML, not a superset.",
+    src: "Doc 3/4 — SysML vs. UML, Slide 31", tf: true
+  },
+  {
+    q: "In the HSUV context diagram, which element represents the SYSTEM BOUNDARY correctly?",
+    opts: ["The Driver, Passenger, and Maintainer are inside the system boundary","Only the software components are inside the system boundary","The HybridSUV block is the system; Driver, Environment, Maintainer, and Baggage are EXTERNAL actors","All elements including the road and weather are part of the system"],
+    ans: 2,
+    explain: "✓ <strong>C — System boundary separates 'our system' from the external world.</strong> The HSUV is inside. Driver, Passenger, Maintainer, Baggage, and Environment are outside. This is the first step of analysis — define what you own before modeling internals.",
+    src: "Doc 4/5 — Slide 34, HSUV Context Diagram", tf: false
   }
 ];
 
